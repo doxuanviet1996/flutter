@@ -23,6 +23,8 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
   int _selectedHour = 0;
   int _selectedMinute = 0;
 
+  Duration timerDuration = new Duration(minutes: 1);
+
   Widget _buildMenu(List<Widget> children) {
     return new Container(
       decoration: const BoxDecoration(
@@ -74,63 +76,6 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
     );
   }
 
-  Widget _buildAlarmPicker() {
-    return new Row(
-      children: <Widget>[
-        new Expanded(
-          child: new CupertinoPicker(
-            scrollController: new FixedExtentScrollController(
-              initialItem: _selectedHour,
-            ),
-            offAxisFraction: -0.5,
-            useMagnifier: true,
-            magnification: 1.1,
-            itemExtent: _kPickerItemHeight,
-            backgroundColor: CupertinoColors.white,
-            onSelectedItemChanged: (int index) {
-              setState(() {
-                _selectedHour = index;
-              });
-            },
-            children: new List<Widget>.generate(24, (int index) {
-              return new Container(
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.only(right: 32.0),
-                child: new Text(index.toString()),
-              );
-            }),
-            looping: true,
-          ),
-        ),
-        new Expanded(
-          child: new CupertinoPicker(
-            scrollController: new FixedExtentScrollController(
-              initialItem: _selectedMinute,
-            ),
-            offAxisFraction: 0.5,
-            useMagnifier: true,
-            magnification: 1.1,
-            itemExtent: _kPickerItemHeight,
-            backgroundColor: CupertinoColors.white,
-            onSelectedItemChanged: (int index) {
-              setState(() {
-                _selectedMinute = index;
-              });
-            },
-            children: new List<Widget>.generate(60, (int index) {
-              return new Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: 32.0),
-                child: new Text(index.toString()),
-              );
-            }),
-            looping: true,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildBottomPicker(Widget picker) {
     return new Container(
       height: _kPickerSheetHeight,
@@ -153,7 +98,7 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
 
   @override
   Widget build(BuildContext context) {
-    final String time = new DateFormat.Hm().format(new DateTime(2018, 1, 1, _selectedHour, _selectedMinute));
+    final String time = timerDuration.toString();
     return new Scaffold(
       appBar: new AppBar(
         title: const Text('Cupertino Picker'),
@@ -195,7 +140,18 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                   await showModalBottomSheet<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return _buildBottomPicker(_buildAlarmPicker());
+                      return _buildBottomPicker(
+                        CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.countDownTimer,
+                          initialTimerDuration: timerDuration,
+                          onTimerDurationChanged: (Duration newDuration) {
+                            setState(() {
+                              print(newDuration.toString());
+                              timerDuration = newDuration;
+                            });
+                          },
+                        )
+                      );
                     },
                   );
                 },
