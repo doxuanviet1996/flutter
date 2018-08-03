@@ -34,18 +34,18 @@ enum CupertinoDatePickerMode {
 /// A date picker widget in iOS style.
 class CupertinoDatePicker extends StatefulWidget {
   /// Basic constructor for the date picker.
-  CupertinoDatePicker(
-    this.mode, {
-      this.onDateChanged,
-      this.onTimerDurationChanged,
-      this.initialDate,
-      this.minimumDate,
-      this.maximumDate,
-      this.minuteInterval,
-      this.initialTimerDuration,
-    }) :  assert(mode != null),
-          assert(onDateChanged != null || mode == CupertinoDatePickerMode.countDownTimer),
-          assert(onTimerDurationChanged != null || mode != CupertinoDatePickerMode.countDownTimer);
+  const CupertinoDatePicker({
+    this.mode = CupertinoDatePickerMode.countDownTimer,
+    this.onDateChanged,
+    this.onTimerDurationChanged,
+    this.initialDate,
+    this.minimumDate,
+    this.maximumDate,
+    this.minuteInterval,
+    this.initialTimerDuration,
+  }) : assert(mode != null),
+       assert(onDateChanged != null || mode == CupertinoDatePickerMode.countDownTimer),
+       assert(onTimerDurationChanged != null || mode != CupertinoDatePickerMode.countDownTimer);
 
   /// Mode of the DatePicker.
   final CupertinoDatePickerMode mode;
@@ -100,6 +100,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
       children: <Widget>[
         new Row(
           children: <Widget>[
+            // The hour picker.
             new Expanded(
               child: new CupertinoPicker(
                 scrollController: new FixedExtentScrollController(
@@ -113,6 +114,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 onSelectedItemChanged: (int index) {
                   setState(() {
                     _selectedHour = index;
+                    widget.onTimerDurationChanged(new Duration(hours: _selectedHour, minutes: _selectedMinute));
                   });
                 },
                 children: new List<Widget>.generate(24, (int index) {
@@ -125,6 +127,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 looping: true,
               ),
             ),
+            // The minute picker.
             new Expanded(
               child: new CupertinoPicker(
                 scrollController: new FixedExtentScrollController(
@@ -138,6 +141,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 onSelectedItemChanged: (int index) {
                   setState(() {
                     _selectedMinute = index;
+                    widget.onTimerDurationChanged(new Duration(hours: _selectedHour, minutes: _selectedMinute));
                   });
                 },
                 children: new List<Widget>.generate(60, (int index) {
