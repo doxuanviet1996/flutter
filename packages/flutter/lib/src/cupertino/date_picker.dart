@@ -76,6 +76,8 @@ class CupertinoDatePicker extends StatefulWidget {
 }
 
 class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
+  int _selectedHour;
+  int _selectedMinute;
   Widget _buildTimeMode(BuildContext context) {
     return null;
   }
@@ -89,11 +91,15 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
   }
 
   Widget _buildCountDownTimerMode(BuildContext context) {
-    int _selectedHour = 0;
-    int _selectedMinute = 1;
-    if (widget.initialTimerDuration != null) {
-      _selectedHour = widget.initialTimerDuration.inHours;
-      _selectedMinute = widget.initialTimerDuration.inMinutes % 60;
+    if (_selectedHour == null && _selectedMinute == null) {
+      if(widget.initialTimerDuration != null) {
+        _selectedHour = widget.initialTimerDuration.inHours % 24;
+        _selectedMinute = widget.initialTimerDuration.inMinutes % 60;
+      }
+      else {
+        _selectedHour = 0;
+        _selectedMinute = 1;
+      }
     }
 
     return new Stack(
@@ -106,7 +112,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 scrollController: new FixedExtentScrollController(
                   initialItem: _selectedHour,
                 ),
-                offAxisFraction: -0.5,
+                offAxisFraction: -0.1,
                 useMagnifier: true,
                 magnification: _kMagnification,
                 itemExtent: _kItemExtent,
@@ -119,8 +125,8 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 },
                 children: new List<Widget>.generate(24, (int index) {
                   return new Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 32.0),
+                    alignment: Alignment.center,
+//                    padding: const EdgeInsets.only(right: 64.0),
                     child: new Text(index.toString()),
                   );
                 }),
@@ -147,7 +153,7 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
                 children: new List<Widget>.generate(60, (int index) {
                   return new Container(
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(left: 32.0),
+//                    padding: const EdgeInsets.only(left: 32.0),
                     child: new Text(index.toString()),
                   );
                 }),
@@ -156,6 +162,30 @@ class _CupertinoDatePickerState extends State<CupertinoDatePicker> {
             ),
           ],
         ),
+        new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new Container(
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 32.0),
+                child: const Text(
+                  'hours',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+            new Expanded(
+              child: new Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 36.0),
+                child: const Text(
+                  'mins',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+          ],
+        )
       ],
     );
   }

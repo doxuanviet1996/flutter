@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 import 'cupertino_navigation_demo.dart' show coolColorNames;
 
-const double _kPickerSheetHeight = 216.0;
+const double _kPickerSheetHeight = 256.0;
 const double _kPickerItemHeight = 32.0;
 
 class CupertinoPickerDemo extends StatefulWidget {
@@ -19,9 +19,6 @@ class CupertinoPickerDemo extends StatefulWidget {
 
 class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
   int _selectedColorIndex = 0;
-
-  int _selectedHour = 0;
-  int _selectedMinute = 0;
 
   Duration timerDuration = new Duration(minutes: 1);
 
@@ -146,7 +143,6 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                           initialTimerDuration: timerDuration,
                           onTimerDurationChanged: (Duration newDuration) {
                             setState(() {
-                              print(newDuration.toString());
                               timerDuration = newDuration;
                             });
                           },
@@ -157,7 +153,7 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                 },
                 child: _buildMenu(
                   <Widget>[
-                    const Text('Alarm'),
+                    const Text('Countdown Timer'),
                     new Text(
                       time,
                       style: const TextStyle(
