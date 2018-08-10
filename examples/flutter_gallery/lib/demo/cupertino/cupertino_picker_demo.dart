@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 import 'cupertino_navigation_demo.dart' show coolColorNames;
 
-const double _kPickerSheetHeight = 256.0;
+const double _kPickerSheetHeight = 216.0;
 const double _kPickerItemHeight = 32.0;
 
 class CupertinoPickerDemo extends StatefulWidget {
@@ -20,7 +20,13 @@ class CupertinoPickerDemo extends StatefulWidget {
 class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
   int _selectedColorIndex = 0;
 
-  Duration timerDuration = new Duration(minutes: 1);
+  Duration timerDuration = new Duration(minutes: 5);
+
+  DateTime time = new DateTime.now();
+
+  DateTime date = new DateTime.now();
+
+  DateTime dateAndTime = new DateTime.now();
 
   Widget _buildMenu(List<Widget> children) {
     return new Container(
@@ -93,9 +99,76 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
     );
   }
 
+  Widget _buildCalendarPicker(BuildContext context) {
+    return new GestureDetector(
+      onTap: () async {
+        await showModalBottomSheet<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildBottomPicker(
+              new CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                initialDate: date,
+                onDateChanged: (DateTime newDate) {
+                  setState(() {
+                    date = newDate;
+                  });
+                },
+              )
+            );
+          },
+        );
+      },
+      child: _buildMenu(
+          <Widget>[
+            const Text('Calendar'),
+            new Text(
+              DateFormat.yMMMMd().format(date),
+              style: const TextStyle(
+                  color: CupertinoColors.inactiveGray
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
+  Widget _buildDateAndTimePicker(BuildContext context) {
+    return new GestureDetector(
+      onTap: () async {
+        await showModalBottomSheet<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildBottomPicker(
+                new CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  initialDate: dateAndTime,
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      dateAndTime = newDate;
+                    });
+                  },
+                )
+            );
+          },
+        );
+      },
+      child: _buildMenu(
+          <Widget>[
+            const Text('Full Date Time'),
+            new Text(
+              DateFormat('hh:mm aa, MMM dd yyyy').format(dateAndTime),
+              style: const TextStyle(
+                  color: CupertinoColors.inactiveGray
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String time = timerDuration.toString();
     return new Scaffold(
       appBar: new AppBar(
         title: const Text('Cupertino Picker'),
@@ -138,8 +211,7 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                     context: context,
                     builder: (BuildContext context) {
                       return _buildBottomPicker(
-                        CupertinoDatePicker(
-                          mode: CupertinoDatePickerMode.countDownTimer,
+                        CupertinoCountdownTimerPicker(
                           initialTimerDuration: timerDuration,
                           onTimerDurationChanged: (Duration newDuration) {
                             setState(() {
@@ -155,7 +227,7 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                   <Widget>[
                     const Text('Countdown Timer'),
                     new Text(
-                      time,
+                      '${timerDuration.inHours}:${(timerDuration.inMinutes % 60).toString().padLeft(2,'0')}',
                       style: const TextStyle(
                         color: CupertinoColors.inactiveGray
                       ),
@@ -163,6 +235,39 @@ class _CupertinoPickerDemoState extends State<CupertinoPickerDemo> {
                   ]
                 ),
               ),
+              new GestureDetector(
+                onTap: () async {
+                  await showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return _buildBottomPicker(
+                          CupertinoDatePicker(
+                            mode: CupertinoDatePickerMode.time,
+                            initialDate: time,
+                            onDateChanged: (DateTime newDate) {
+                              setState(() {
+                                time = newDate;
+                              });
+                            },
+                          )
+                      );
+                    },
+                  );
+                },
+                child: _buildMenu(
+                    <Widget>[
+                      const Text('Alarm'),
+                      new Text(
+                        DateFormat.jm().format(time),
+                        style: const TextStyle(
+                            color: CupertinoColors.inactiveGray
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+              _buildCalendarPicker(context),
+              _buildDateAndTimePicker(context),
             ],
           ),
         ),
