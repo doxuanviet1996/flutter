@@ -39,13 +39,16 @@ class CupertinoDatePicker extends StatefulWidget {
   /// The [mode] defaults to [CupertinoDatePickerMode.dateAndTime].
   ///
   /// [onDateChanged] is the callback when user scrolls and must not be null.
+  ///
+  /// [use24hFormat] decides whether 24 hour format is used. Defaults to false.
   CupertinoDatePicker({
     this.mode = CupertinoDatePickerMode.dateAndTime,
     @required this.onDateChanged,
     this.initialDate,
     this.minimumDate,
     this.maximumDate,
-    this.minuteInterval = 5, // defaults to 5 for detecting bugs. Should be 1.
+    this.minuteInterval = 1,
+
   }) : assert(mode != null),
        assert(onDateChanged != null),
        assert(60 % minuteInterval == 0);
@@ -65,6 +68,9 @@ class CupertinoDatePicker extends StatefulWidget {
   /// The granularity of the minutes spinner, if it is shown in the current mode.
   ///  Must be a factor of 60.
   final int minuteInterval;
+
+  /// Whether to use 24 hour format.
+  final bool use24hFormat;
 
   /// Callback when the selected date changes.
   final ValueChanged<DateTime> onDateChanged;
