@@ -1537,7 +1537,7 @@ class _MatchesSemanticsData extends Matcher {
 
   @override
   Description describe(Description description) {
-    description.add('has semantics');
+    description.add('has semantics ');
     if (label != null)
       description.add('with label: $label ');
     if (value != null)
